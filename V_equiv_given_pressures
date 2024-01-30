@@ -1,0 +1,16 @@
+#This code computes Equivalent Velocity of an aircraft given its measured pitot-static and pitot (total minus static) pressures
+
+psi_to_psf = 144            # 1 psi = 144 psf
+knot_to_ftpersec = 1.68781  # 1 knot = 1.68781 feet per sec
+slug_to_lb = 32.174         # 1 slug = 32.174 pounds
+
+P_stat = 4.37               # pounds per square inches, pitot-static pressure or 'P1'
+P_dyn = 5.71                # pounds per square inches, dynamic pressure or 'P_tot - P1'
+rho_sl = 2.3769e-3          # slugs per cubic feet, density at sea level
+gamma = 1.4                 # dimensionless, specific heat ratio
+
+def get_Vequiv_given_Pressures(P_stat, P_dyn):
+    Vequiv_sq = (P_stat/(rho_sl*slug_to_lb))*(2*gamma/(gamma-1))*(( P_dyn/P_stat + 1)**((gamma-1)/gamma) - 1)
+    return ((Vequiv_sq)**0.5)/knot_to_ftpersec
+
+print("Equivalent Velocity in knots: ", get_Vequiv_given_Pressures(P_stat, P_dyn))
