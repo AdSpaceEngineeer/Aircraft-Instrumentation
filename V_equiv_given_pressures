@@ -1,6 +1,6 @@
 #This code computes Equivalent Velocity of an aircraft given its measured pitot-static and pitot (total minus static) pressures
 
-psi_to_psf = 144            # 1 psi = 144 psf
+psi_to_psf = 144            # 1 psi = 144 psf 
 knot_to_ftpersec = 1.68781  # 1 knot = 1.68781 feet per sec
 slug_to_lb = 32.174         # 1 slug = 32.174 pounds
 
