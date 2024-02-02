@@ -17,8 +17,6 @@ def get_PTrho_given_altitude(h,g0,R,P_sl,rho_sl,F_to_R,a,T_sl,T_trop,P_trop,rho_
     return [P, T - F_to_R, rho]     #return Pressure in lb/ft2, Temperature in degF and Density in slugs/ft3
 
 #given parameters and constants
-# Problem 2
-# part c
 
 rho_sl = 2.3769e-3          # slugs per cubic feet, density at sea level
 P_sl = 2116.22              # pounds per square feet, pressure at sea level
@@ -26,17 +24,15 @@ hG = 42000                  # feet, geometric altitude
 Vcal = 590                  # knots, Calibrated Speed
 gamma = 1.4                 # dimensionless, specific heat ratio
 
-#knot_to_ftpersec = 1.68781  # 1 knot = 1.68781 feet per sec
-#slug_to_lb = 32.174         # 1 slug = 32.174 pounds
+knot_to_ftpersec = 1.68781  # 1 knot = 1.68781 feet per sec
 psi_to_psf = 144            # 1 psi = 144 psf
 
+#compute speed of sound at sea level
 a0 = (gamma*P_sl/(rho_sl))**0.5  # feet per seconds, speed of sound at sea level
 print("Speed of sound at sea level / ft.s-1: ", a0)
-#T_36 = -70.68       # deg Fahrenheit, Temperature at 36K feet
 
-#part i
-#Vcal_ftpersec = Vcal #* knot_to_ftpersec
-term1 = Vcal**2 * (gamma-1)/(2*a0**2) + 1
+#compute dynamic pressure 'p_total minus p_static'
+term1 = (Vcal*knot_to_ftpersec)**2 * (gamma-1)/(2*a0**2) + 1
 term2 = term1**(gamma/(gamma-1)) - 1
 P_dyn = term2*P_sl  #pounds per square feet, dynamic pressure at 42000 feet, 590 knots Vcal
 print("Ptot - P_stat / psf :", P_dyn)
@@ -50,20 +46,23 @@ T_trop = -70.68     # deg Fahrenheit, Temperature at 36000 feet
 P_trop = 474.59       # pounds per square feet, pressure at 36000 feet
 rho_trop = 7.0864e-4  # slugs per cubic feet, density at 36000 feet
 
-#part ii
+# get static pressure at given altitude
 P_stat = get_PTrho_given_altitude(hG,g0,R,P_sl,rho_sl,F_to_R,a,T_sl,T_trop,P_trop,rho_trop)[0]
 print("P_stat / psf :", P_stat)
 
-#part iii - find absolute difference between Vcal and Vtrue
+# get dry air density at given altitude
 rho_h = get_PTrho_given_altitude(hG,g0,R,P_sl,rho_sl,F_to_R,a,T_sl,T_trop,P_trop,rho_trop)[2]
 print("Density of air at 42000 feet / slug.ft-3: ", rho_h)
 
+#compute speed of sound at given altitude
 a1 = (gamma*P_stat/(rho_h))**0.5  # feet per seconds, speed of sound at 42K altitude
 print("Speed of sound at 42000 feet / ft.s-1: ", a1)
 
+#compute True Airspeed given pressures and speed of sound at given altitude
 term3 = ( (P_dyn/P_stat) + 1)**((gamma-1)/gamma) - 1
 term4 = 2*a1**2/(gamma-1)
 Vtrue = (term4*term3)**0.5
-print("Vtrue / knots :", Vtrue)
-print("Absolute difference between Vtrue and Vcal / knots :", Vtrue - Vcal)
+print("Vtrue / ft.s-1 : ", Vtrue)
+print("Absolute difference between Vtrue and Vcal / knots :", Vtrue/knot_to_ftpersec - Vcal)
+
 
